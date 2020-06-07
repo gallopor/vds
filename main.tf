@@ -55,34 +55,15 @@ resource "vsphere_virtual_machine" "vm" {
     network_id     = data.vsphere_network.network1.id
     adapter_type   = "e1000"
   }
+  
+  dynamic "network_interface" {
+    for_each = range(var.vtc_port_count)
 
-  network_interface {
-    network_id     = data.vsphere_network.network2.id
-    adapter_type   = "vmxnet3"
+    content {
+        network_id     = data.vsphere_network.network2.id
+        adapter_type   = "vmxnet3"
+    }
   }
-
-  network_interface {
-    network_id = data.vsphere_network.network2.id
-    adapter_type   = "vmxnet3"
-  }
-
-  # network_interface {
-  #   network_id = data.vsphere_network.network2.id
-  #   adapter_type   = "vmxnet3"
-  # }
-
-  # network_interface {
-  #   network_id = data.vsphere_network.network2.id
-  #   adapter_type   = "vmxnet3"
-  # }
-
-  # dynamic "network_interface" {
-  #   for_each = each.value.networks
-
-  #   content {
-  #     network_id = module.vsphere_networks.vsphere_networks[network_interface.key].id
-  #   }
-  # }
 
   disk {
     label            = "${var.vtc_name_prefix}-${count.index + 1}-disk"
@@ -100,7 +81,7 @@ resource "vsphere_virtual_machine" "vm" {
 
   vapp {
     properties = {
-      "ipv4mode"   = "static"
+      "ipv4mode"   = var.vtc_ip_mode
       "ipaddress"  = cidrhost(var.vtc_cidr, var.vtc_cidr_first_num + count.index)
       "netmask"    = cidrnetmask(var.vtc_cidr)
       "gwaddress"  = var.vtc_gw_address
