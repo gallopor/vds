@@ -63,8 +63,9 @@ variable "vtc_disk_size" {
   description = "Amount of Disk for the vTC"
 }
 
-variable "vtc_nic_count" {
+variable "vtc_port_count" {
   type        = number
+  default     = 2
   description = "Count of network interfaces for the vTC"
 }
 
@@ -81,7 +82,7 @@ variable "vtc_notes" {
 variable "vtc_ip_mode" {
   type        = string
   default     = "dhcp"
-  description = "The IP address of the VM"
+  description = "The IP mode of the VM"
 }
 
 variable "vtc_cidr" {
@@ -100,5 +101,5 @@ variable "vtc_gw_address" {
 variable "vtc_port_speed" {
   type        = string
   default     = "1G"
-  description = "The IP address of the VM"
+  description = "The port speed of the VM"
 }
